@@ -128,6 +128,8 @@ def get_font_enc_map(fonts):
         if(isinstance(encoding, pikepdf.Name)):
             if encoding == pikepdf.Name('/WinAnsiEncoding'):
                 continue
+        if not isinstance(encoding, pikepdf.Dictionary):
+            continue
             
         enc_diff = encoding.get('/Differences', None)
         diff_map = {}
@@ -146,6 +148,8 @@ def get_font_enc_map(fonts):
                 else:
                     # get standard char code from glyphcode ('GC0' -> '\xc0')
                     std_char_code = std_encoding.get(glyph_code_or_offset, None)
+                    if std_char_code is None:
+                        continue
                     # map diff code to glyph code (2 -> \xc0)
                     diff_map[custom_encoding_first_index + custom_encoding_offset] = std_char_code
                     custom_encoding_offset += 1
